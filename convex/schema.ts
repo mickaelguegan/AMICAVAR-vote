@@ -1,0 +1,47 @@
+import { defineSchema, defineTable } from "convex/server";
+import { v } from "convex/values";
+
+export const seasonV = v.union(v.literal("P"), v.literal("E"), v.literal("A"));
+export const phaseV = v.union(v.literal("propositions"), v.literal("vote"), v.literal("resultats"));
+export const roleV = v.union(v.literal("membre"), v.literal("bureau"));
+
+export default defineSchema({
+  // Un seul document : la campagne en cours.
+  settings: defineTable({
+    phase: phaseV,
+    budget: v.number(),
+    perSeason: v.number(),
+  }),
+
+  // Liste blanche des membres. `cle` est le secret du lien personnel.
+  members: defineTable({
+    prenom: v.string(),
+    nom: v.string(),
+    email: v.string(),
+    role: roleV,
+    cle: v.string(),
+  })
+    .index("by_cle", ["cle"])
+    .index("by_email", ["email"]),
+
+  proposals: defineTable({
+    title: v.string(),
+    description: v.string(),
+    seasons: v.array(seasonV),
+    suggestedCost: v.number(),
+    // Coût validé par le bureau (1 à 3), null tant qu'il n'est pas validé.
+    cost: v.union(v.number(), v.null()),
+    authorId: v.id("members"),
+    authorName: v.string(),
+    // Arbitrage des égalités par le bureau : plus grand = classé devant.
+    tieBreak: v.number(),
+  }),
+
+  votes: defineTable({
+    memberId: v.id("members"),
+    proposalId: v.id("proposals"),
+    season: seasonV,
+  })
+    .index("by_member", ["memberId"])
+    .index("by_proposal", ["proposalId"]),
+});
