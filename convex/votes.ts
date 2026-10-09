@@ -20,14 +20,14 @@ export const toggle = mutation({
     const myVotes: MyVote[] = [];
     for (const vote of mine) {
       const p: any = await ctx.db.get(vote.proposalId);
-      myVotes.push({ proposalId: vote.proposalId, season: vote.season, cost: p?.cost ?? 0 });
+      myVotes.push({ proposalId: vote.proposalId, season: vote.season, cost: p?.cost ?? p?.suggestedCost ?? 0 });
     }
 
     const decision = decideVote({
       phase: settings.phase,
       proposalId,
       proposalSeasons: proposal.seasons,
-      proposalCost: proposal.cost,
+      proposalCost: (proposal.validated ?? proposal.cost != null) ? (proposal.cost ?? proposal.suggestedCost) : null,
       season,
       myVotes,
       budget: settings.budget,

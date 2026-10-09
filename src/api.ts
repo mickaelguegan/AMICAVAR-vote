@@ -10,7 +10,8 @@ export type Proposal = {
   description: string;
   seasons: Season[];
   suggestedCost: number;
-  cost: number | null;
+  cost: number;
+  validated: boolean;
   authorId: string;
   authorName: string;
   tieBreak: number;

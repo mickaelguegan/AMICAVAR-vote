@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useRef, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ConvexError } from "convex/values";
 import { jetons, SEASON_LABEL, SEASONS, type Season } from "../convex/rules";
 
@@ -198,6 +198,75 @@ export function ConfirmButton({
       <button className="btn ghost" onClick={() => setAsking(false)}>
         Annuler
       </button>
+    </span>
+  );
+}
+
+/* ---------- Icônes (trait, couleur du texte) ---------- */
+
+const ICONS: Record<string, React.ReactNode> = {
+  pencil: <path d="M4 20h4L19 9a2.1 2.1 0 0 0-4-4L4 16v4zM13.5 6.5l4 4" />,
+  trash: <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6" />,
+  merge: <path d="M6 3v3a6 6 0 0 0 6 6M18 3v3a6 6 0 0 1-6 6v9M8.5 17.5L12 21l3.5-3.5" />,
+  hourglass: <path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9M16 3c0 5-8 5-8 9s8 4 8 9" />,
+  check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
+  review: <path d="M9 4h6v3H9zM7 5.5H5.5V21h13V5.5H17M12 11v4M12 18h.01" />,
+  chevron: <path d="M7 10l5 5 5-5" />,
+};
+
+export function Icon({ name, size = 20 }: { name: keyof typeof ICONS | string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {ICONS[name]}
+    </svg>
+  );
+}
+
+/** Petit menu déroulant ancré sous un bouton ; se ferme au clic extérieur ou avec Échap. */
+export function Popover({
+  trigger,
+  label,
+  className = "iconbtn",
+  disabled,
+  children,
+}: {
+  trigger: React.ReactNode;
+  label: string;
+  className?: string;
+  disabled?: boolean;
+  children: (close: () => void) => React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  return (
+    <span className="pop" ref={ref}>
+      <button
+        type="button"
+        className={className}
+        aria-label={label}
+        title={label}
+        aria-expanded={open}
+        disabled={disabled}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {trigger}
+      </button>
+      {open && <div className="pop-panel" role="menu">{children(() => setOpen(false))}</div>}
     </span>
   );
 }

@@ -12,7 +12,7 @@ export default function VoteView({ state, cle }: { state: AppState; cle: string 
   const run = useRun();
   const [busy, setBusy] = useState<string | null>(null);
 
-  const costOf = new Map(proposals.map((p) => [p.id, p.cost ?? 0]));
+  const costOf = new Map(proposals.map((p) => [p.id, p.cost]));
   const myVotes: MyVote[] = votes
     .filter((v) => v.memberId === me.id)
     .map((v) => ({ proposalId: v.proposalId, season: v.season, cost: costOf.get(v.proposalId) ?? 0 }));
@@ -77,7 +77,7 @@ export default function VoteView({ state, cle }: { state: AppState; cle: string 
                     phase,
                     proposalId: p.id,
                     proposalSeasons: p.seasons,
-                    proposalCost: p.cost,
+                    proposalCost: p.validated ? p.cost : null,
                     season: s,
                     myVotes,
                     budget,

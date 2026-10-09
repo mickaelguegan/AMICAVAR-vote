@@ -33,11 +33,9 @@ export const setPhase = mutation({
     if (phase === "vote") {
       const proposals: any[] = await ctx.db.query("proposals").collect();
       if (proposals.length === 0) fail("Il n'y a aucune proposition à soumettre au vote.");
-      const missing = proposals.filter((p) => p.cost == null).length;
+      const missing = proposals.filter((p) => !(p.validated ?? p.cost != null)).length;
       if (missing > 0)
-        fail(
-          `Validez le coût de ${missing} proposition${missing > 1 ? "s" : ""} avant d'ouvrir le vote.`,
-        );
+        fail(`Validez ${missing} proposition${missing > 1 ? "s" : ""} avant d'ouvrir le vote.`);
     }
     await ctx.db.patch(settings._id, { phase });
     return PHASE_LABEL[phase as keyof typeof PHASE_LABEL];

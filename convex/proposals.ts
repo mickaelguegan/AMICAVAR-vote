@@ -19,7 +19,8 @@ export const create = mutation({
     const p = rule(() => cleanProposal(input));
     return await ctx.db.insert("proposals", {
       ...p,
-      cost: null,
+      cost: p.suggestedCost,
+      validated: false,
       authorId: me._id,
       authorName: fullName(me),
       tieBreak: 0,
@@ -50,8 +51,11 @@ export const update = mutation({
     if (!isAuthor && !isBureau) fail("Vous ne pouvez modifier que vos propres propositions.");
 
     const patch: Record<string, unknown> = { ...clean };
-    // Si l'auteur change son estimation, le bureau doit revalider le coût.
-    if (!isBureau && clean.suggestedCost !== p.suggestedCost) patch.cost = null;
+    // Une modification par l'auteur repasse la proposition « à vérifier » par le bureau.
+    if (!isBureau) {
+      patch.validated = false;
+      if (clean.suggestedCost !== p.suggestedCost) patch.cost = clean.suggestedCost;
+    }
     await ctx.db.patch(id, patch);
 
     const removed = SEASONS.filter((s) => p.seasons.includes(s) && !clean.seasons.includes(s));
@@ -75,13 +79,26 @@ export const remove = mutation({
 });
 
 export const setCost = mutation({
-  args: { cle: v.string(), id: v.id("proposals"), cost: v.union(v.number(), v.null()) },
+  args: { cle: v.string(), id: v.id("proposals"), cost: v.number() },
   handler: async (ctx, { cle, id, cost }) => {
     await requireBureau(ctx, cle);
     const { phase } = await getSettings(ctx);
-    if (phase !== "propositions") fail("Le coût se valide pendant la phase de propositions.");
-    if (cost !== null && ![1, 2, 3].includes(cost)) fail("Niveau de coût invalide.");
+    if (phase !== "propositions") fail("Le coût se règle pendant la phase de propositions.");
+    if (![1, 2, 3].includes(cost)) fail("Niveau de coût invalide.");
     await ctx.db.patch(id, { cost });
+  },
+});
+
+/** Le bureau acte (ou annule) son contrôle d'une proposition. */
+export const setValidated = mutation({
+  args: { cle: v.string(), id: v.id("proposals"), validated: v.boolean() },
+  handler: async (ctx, { cle, id, validated }) => {
+    await requireBureau(ctx, cle);
+    const { phase } = await getSettings(ctx);
+    if (phase !== "propositions") fail("La validation se fait pendant la phase de propositions.");
+    const p: any = await ctx.db.get(id);
+    if (!p) fail("Cette proposition n'existe plus.");
+    await ctx.db.patch(id, { validated, cost: p.cost ?? p.suggestedCost });
   },
 });
 

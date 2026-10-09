@@ -85,7 +85,7 @@ export function decideVote(args: {
     if (existing.season === season) return { kind: "remove" };
     return { kind: "refuse", reason: `Votre voix est déjà en ${SEASON_LABEL[existing.season]}.` };
   }
-  if (proposalCost == null) return { kind: "refuse", reason: "Le coût n'est pas encore validé." };
+  if (proposalCost == null) return { kind: "refuse", reason: "Proposition pas encore validée par le bureau." };
 
   const inSeason = myVotes.filter((v) => v.season === season).length;
   if (inSeason >= perSeason)

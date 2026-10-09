@@ -29,8 +29,10 @@ export default defineSchema({
     description: v.string(),
     seasons: v.array(seasonV),
     suggestedCost: v.number(),
-    // Coût validé par le bureau (1 à 3), null tant qu'il n'est pas validé.
+    // Niveau de coût en jetons (1 à 3). Anciennes données : null tant que non validé.
     cost: v.union(v.number(), v.null()),
+    // Contrôle du bureau effectué (coût vérifié, doublons traités).
+    validated: v.optional(v.boolean()),
     authorId: v.id("members"),
     authorName: v.string(),
     // Arbitrage des égalités par le bureau : plus grand = classé devant.
