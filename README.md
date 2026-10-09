@@ -30,8 +30,8 @@ Les autres membres s'ajoutent ensuite depuis l'onglet **Bureau** du site (copier
 
 | Phase | Membres | Bureau |
 |---|---|---|
-| Propositions | proposent, modifient et suppriment leurs propositions | renomme, fusionne les doublons, valide le coût (€ < 15 €, €€ 15 à 30 €, €€€ > 30 €) |
-| Vote | 2 voix par saison, 1 voix par activité, budget de 12 € ; bulletin modifiable jusqu'à la clôture | suit la participation |
+| Propositions | proposent, modifient et suppriment leurs propositions | renomme, fusionne les doublons, valide le coût en jetons (1 jeton : moins de 15 €, 2 : 15 à 30 €, 3 : plus de 30 € par personne) |
+| Vote | 2 voix par saison, 1 voix par activité, budget de 12 jetons ; bulletin modifiable jusqu'à la clôture | suit la participation |
 | Résultats | consultent plans A et B | tranche les égalités (« Classer devant ») selon la décision de la Présidente |
 
 Le vote ne peut s'ouvrir que lorsque tous les coûts sont validés. « Réinitialiser la campagne » (onglet Bureau) efface propositions et votes et conserve les membres.

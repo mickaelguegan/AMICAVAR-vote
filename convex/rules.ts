@@ -17,8 +17,9 @@ export const DEFAULT_BUDGET = 12;
 export const DEFAULT_PER_SEASON = 2;
 export const COST_LABEL: Record<number, string> = { 1: "moins de 15 €", 2: "15 à 30 €", 3: "plus de 30 €" };
 
-export function euros(n: number): string {
-  return "€".repeat(Math.max(0, n));
+/** « 1 jeton », « 3 jetons » : l'unité du budget de vote. */
+export function jetons(n: number): string {
+  return `${n} jeton${n > 1 ? "s" : ""}`;
 }
 
 /* ---------- Propositions ---------- */
@@ -92,7 +93,7 @@ export function decideVote(args: {
 
   const spent = myVotes.reduce((t, v) => t + v.cost, 0);
   if (spent + proposalCost > budget)
-    return { kind: "refuse", reason: `Il vous reste ${budget - spent} €, il en faut ${proposalCost}.` };
+    return { kind: "refuse", reason: `Il vous reste ${jetons(budget - spent)}, il en faut ${proposalCost}.` };
 
   return { kind: "add" };
 }

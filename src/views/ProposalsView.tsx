@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useMutation } from "convex/react";
 import { api, type AppState, type Proposal } from "../api";
-import { Chips, ConfirmButton, Cost, useRun } from "../ui";
-import { COST_LABEL, euros, SEASON_LABEL, SEASONS, type Season } from "../../convex/rules";
+import { Chips, ConfirmButton, Cost, Jetons, useRun } from "../ui";
+import { COST_LABEL, jetons, SEASON_LABEL, SEASONS, type Season } from "../../convex/rules";
 
 type Draft = { title: string; description: string; seasons: Season[]; suggestedCost: number | null };
 const EMPTY: Draft = { title: "", description: "", seasons: [], suggestedCost: null };
@@ -137,12 +137,12 @@ export default function ProposalsView({ state, cle }: { state: AppState; cle: st
                     checked={draft.suggestedCost === c}
                     onChange={() => setDraft({ ...draft, suggestedCost: c })}
                   />{" "}
-                  {euros(c)} <span className="small muted">{COST_LABEL[c]}</span>
+                  <Jetons n={c} size={18} /> <span className="small muted">{COST_LABEL[c]}</span>
                 </label>
               ))}
             </div>
           </fieldset>
-          <p className="small muted">Le bureau valide le niveau de coût avant le vote.</p>
+          <p className="small muted">Le nombre de jetons correspond à la tranche de prix. Le bureau le valide avant le vote.</p>
           <p className="err" role="alert">
             {error}
           </p>
@@ -268,7 +268,7 @@ function ProposalCard({
               <option value="">À valider</option>
               {[1, 2, 3].map((c) => (
                 <option key={c} value={c}>
-                  {euros(c)} · {COST_LABEL[c]}
+                  {jetons(c)} · {COST_LABEL[c]}
                 </option>
               ))}
             </select>

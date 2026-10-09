@@ -1,7 +1,7 @@
 import { useMutation } from "convex/react";
 import { api, type AppState } from "../api";
-import { Chips, Cost, useRun } from "../ui";
-import { allocate, euros, SEASON_LABEL, SEASONS, type ResultRow, type Season } from "../../convex/rules";
+import { Chips, Cost, Jetons, SeasonBand, useRun } from "../ui";
+import { allocate, SEASON_LABEL, SEASONS, type ResultRow, type Season } from "../../convex/rules";
 
 export default function ResultsView({ state, cle }: { state: AppState; cle: string }) {
   const { me, settings, proposals, votes, memberCount } = state;
@@ -76,17 +76,19 @@ export default function ResultsView({ state, cle }: { state: AppState; cle: stri
         </div>
         <div className="panel">
           <div className="label">Coût des 3 plans A</div>
-          <div className="big">{costA ? euros(costA) : "–"}</div>
-          <p className="small muted">{costA} niveaux sur 9 possibles · indicateur pour le bureau</p>
+          <div className="big">{costA ? <Jetons n={costA} size={26} /> : "–"}</div>
+          <p className="small muted">{costA} jetons sur 9 possibles · indicateur pour le bureau</p>
         </div>
       </div>
 
       <div className="plans">
         {SEASONS.map((s) => (
-          <section key={s} className={`plan s-${s}`}>
-            <h3 className="season-title">{SEASON_LABEL[s]}</h3>
-            {slot(s, "A")}
-            {slot(s, "B")}
+          <section key={s} className={`postcard plan s-${s}`}>
+            <SeasonBand season={s} />
+            <div className="plan-body">
+              {slot(s, "A")}
+              {slot(s, "B")}
+            </div>
           </section>
         ))}
       </div>
