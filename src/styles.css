@@ -97,7 +97,8 @@ button { cursor: pointer; }
 .purse { background: var(--surface); border-radius: var(--r); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .purse-count { font-family: var(--f-display); font-size: 1.15rem; font-weight: 600; color: var(--muted); }
 .purse-count strong { font-size: 1.9rem; color: var(--fg); }
-.purse-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.purse-row { display: flex; flex-wrap: wrap; gap: 3px; }
+.purse-row .jeton { width: clamp(18px, 6vw, 24px); height: clamp(18px, 6vw, 24px); }
 
 /* Bandeau de saison */
 .band { position: relative; height: 64px; background: var(--s-soft); overflow: hidden; }
