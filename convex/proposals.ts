@@ -1,7 +1,7 @@
 import { mutationGeneric as mutation } from "convex/server";
 import { v } from "convex/values";
 import { deleteVotesOf, fail, fullName, getSettings, isBureauRole, requireBureau, requireMember, rule } from "./lib";
-import { cleanProposal, SEASONS } from "./rules";
+import { cleanProposal, COST_LEVELS, SEASONS } from "./rules";
 
 const proposalArgs = {
   title: v.string(),
@@ -84,7 +84,7 @@ export const setCost = mutation({
     await requireBureau(ctx, cle);
     const { phase } = await getSettings(ctx);
     if (phase !== "propositions") fail("Le coût se règle pendant la phase de propositions.");
-    if (![1, 2, 3].includes(cost)) fail("Niveau de coût invalide.");
+    if (!COST_LEVELS.includes(cost)) fail("Niveau de coût invalide.");
     await ctx.db.patch(id, { cost });
   },
 });

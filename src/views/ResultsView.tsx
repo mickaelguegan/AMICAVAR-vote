@@ -77,7 +77,7 @@ export default function ResultsView({ state, cle }: { state: AppState; cle: stri
         <div className="panel">
           <div className="label">Coût des 3 plans A</div>
           <div className="big">{costA ? <Jetons n={costA} size={26} /> : "–"}</div>
-          <p className="small muted">{costA} jetons sur 9 possibles · indicateur pour le bureau</p>
+          <p className="small muted">{costA} jetons sur {3 * 4} possibles · indicateur pour le bureau</p>
         </div>
       </div>
 

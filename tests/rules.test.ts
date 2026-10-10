@@ -134,7 +134,8 @@ test("proposition : validation et nettoyage", () => {
   assert.deepEqual(ok.seasons, ["E"]);
   assert.throws(() => cleanProposal({ title: "Ka", description: "", seasons: ["E"], suggestedCost: 2 }), RuleError);
   assert.throws(() => cleanProposal({ title: "Kayak", description: "", seasons: [], suggestedCost: 2 }), RuleError);
-  assert.throws(() => cleanProposal({ title: "Kayak", description: "", seasons: ["E"], suggestedCost: 4 }), RuleError);
+  assert.equal(cleanProposal({ title: "Kayak", description: "", seasons: ["E"], suggestedCost: 4 }).suggestedCost, 4);
+  assert.throws(() => cleanProposal({ title: "Kayak", description: "", seasons: ["E"], suggestedCost: 5 }), RuleError);
 });
 
 test("import des membres depuis Excel", () => {

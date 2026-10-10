@@ -16,7 +16,9 @@ export const PHASE_LABEL: Record<Phase, string> = {
 };
 export const DEFAULT_BUDGET = 12;
 export const DEFAULT_PER_SEASON = 2;
-export const COST_LABEL: Record<number, string> = { 1: "moins de 15 €", 2: "15 à 30 €", 3: "plus de 30 €" };
+/** Tranches de prix par personne ; le nombre de jetons d'une sortie = sa tranche. */
+export const COST_LEVELS = [1, 2, 3, 4];
+export const COST_LABEL: Record<number, string> = { 1: "moins de 15 €", 2: "15 à 30 €", 3: "30 à 50 €", 4: "plus de 50 €" };
 
 /** « 1 jeton », « 3 jetons » : l'unité du budget de vote. */
 export function jetons(n: number): string {
@@ -46,7 +48,7 @@ export function cleanProposal(input: ProposalInput): {
   if (title.length > 120) throw new RuleError("Le nom de l'activité est trop long (120 caractères maximum).");
   if (description.length > 1000) throw new RuleError("Les détails sont trop longs (1000 caractères maximum).");
   if (seasons.length === 0) throw new RuleError("Cochez au moins une saison.");
-  if (![1, 2, 3].includes(input.suggestedCost)) throw new RuleError("Indiquez un coût estimé.");
+  if (!COST_LEVELS.includes(input.suggestedCost)) throw new RuleError("Indiquez un coût estimé.");
   return { title, description, seasons, suggestedCost: input.suggestedCost };
 }
 

@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { useMutation } from "convex/react";
 import { api, type AppState, type Proposal } from "../api";
 import { Chips, Icon, Jetons, Popover, useRun } from "../ui";
-import { COST_LABEL, jetons, SEASON_LABEL, SEASONS, type Season } from "../../convex/rules";
+import { COST_LABEL, COST_LEVELS, jetons, SEASON_LABEL, SEASONS, type Season } from "../../convex/rules";
 
 type Draft = { title: string; description: string; seasons: Season[]; suggestedCost: number | null };
 const EMPTY: Draft = { title: "", description: "", seasons: [], suggestedCost: null };
@@ -128,7 +128,7 @@ export default function ProposalsView({ state, cle }: { state: AppState; cle: st
           <fieldset className="field" disabled={formDisabled || !canEditAll}>
             <legend className="label">Coût estimé par personne</legend>
             <div className="opts">
-              {[1, 2, 3].map((c) => (
+              {COST_LEVELS.map((c) => (
                 <label key={c} className="opt">
                   <input
                     type="radio"
@@ -276,7 +276,7 @@ function ProposalCard({
           >
             {(close) => (
               <div className="pop-list">
-                {[1, 2, 3].map((c) => (
+                {COST_LEVELS.map((c) => (
                   <button
                     key={c}
                     role="menuitemradio"

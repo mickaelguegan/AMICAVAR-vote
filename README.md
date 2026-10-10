@@ -30,7 +30,7 @@ Ce premier compte a le rôle **Gestion** (accès aux e-mails et aux liens). Les 
 
 | Phase | Membres | Bureau |
 |---|---|---|
-| Propositions | proposent, modifient et suppriment leurs propositions | renomme, fusionne les doublons, valide le coût en jetons (1 jeton : moins de 15 €, 2 : 15 à 30 €, 3 : plus de 30 € par personne) |
+| Propositions | proposent, modifient et suppriment leurs propositions | renomme, fusionne les doublons, valide le coût en jetons (1 jeton : moins de 15 €, 2 : 15 à 30 €, 3 : 30 à 50 €, 4 : plus de 50 € par personne) |
 | Vote | 2 voix par saison, 1 voix par activité, budget de 12 jetons ; bulletin modifiable jusqu'à la clôture | suit la participation |
 | Résultats | consultent plans A et B | tranche les égalités (« Classer devant ») selon la décision de la Présidente |
 
