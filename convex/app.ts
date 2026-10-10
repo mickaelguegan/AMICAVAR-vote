@@ -20,7 +20,7 @@ export const state = query({
 
     return {
       me: { id: me._id as string, prenom: me.prenom, nom: me.nom, role: me.role },
-      settings: { phase: settings.phase, budget: settings.budget, perSeason: settings.perSeason },
+      settings: { phase: settings.phase, budget: settings.budget, perSeason: settings.perSeason, contactEmail: settings.contactEmail ?? "" },
       memberCount: members.length,
       proposals: proposals
         .map((p: any) => ({

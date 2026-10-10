@@ -21,6 +21,8 @@ export default function BureauView({
   const regenerate = useMutation(api.admin.regenerateCle);
   const updateMember = useMutation(api.admin.updateMember);
   const resetCampaign = useMutation(api.admin.resetCampaign);
+  const setContact = useMutation(api.admin.setContact);
+  const [contact, setContactDraft] = useState(state.settings.contactEmail);
   const run = useRun();
   const toast = useToast();
 
@@ -259,6 +261,35 @@ export default function BureauView({
             </table>
           </div>
         )}
+      </section>
+
+      <section className="panel">
+        <h2>Contact pour les données personnelles</h2>
+        <p className="small muted rules">
+          Cette adresse apparaît dans la note « Traitement des données », en bas de chaque page. Les membres l'utilisent pour exercer
+          leurs droits (accès, correction, suppression).
+        </p>
+        <form
+          className="row"
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(() => setContact({ cle, email: contact }), "Adresse de contact enregistrée.");
+          }}
+        >
+          <input
+            type="text"
+            id="contact-email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder="prenom.nom@exemple.fr"
+            value={contact}
+            onChange={(e) => setContactDraft(e.target.value)}
+            style={{ maxWidth: 340 }}
+          />
+          <button className="btn primary" type="submit">
+            Enregistrer
+          </button>
+        </form>
       </section>
 
       <section className="panel danger-zone">

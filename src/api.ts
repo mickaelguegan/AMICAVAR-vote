@@ -22,7 +22,7 @@ export type Vote = { proposalId: string; season: Season; memberId: string; membe
 
 export type AppState = {
   me: { id: string; prenom: string; nom: string; role: Role };
-  settings: { phase: Phase; budget: number; perSeason: number };
+  settings: { phase: Phase; budget: number; perSeason: number; contactEmail: string };
   memberCount: number;
   proposals: Proposal[];
   votes: Vote[];

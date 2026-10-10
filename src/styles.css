@@ -1,3 +1,11 @@
+/* Polices hébergées avec le site (licence SIL OFL, voir src/fonts/OFL.txt) : aucun appel à un service tiers. */
+@font-face { font-family: "Barlow"; src: url("./fonts/Barlow-Regular.woff") format("woff"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Barlow"; src: url("./fonts/Barlow-Italic.woff") format("woff"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Barlow"; src: url("./fonts/Barlow-SemiBold.woff") format("woff"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("./fonts/BarlowCondensed-Medium.woff") format("woff"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("./fonts/BarlowCondensed-SemiBold.woff") format("woff"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Barlow Condensed"; src: url("./fonts/BarlowCondensed-Bold.woff") format("woff"); font-weight: 700; font-style: normal; font-display: swap; }
+
 /* Ambiance « carte postale » : saisons en bandeaux illustrés, vote = carte qui prend la couleur de sa saison,
    budget en jetons dessinés. Titres en Barlow Condensed (proche de l'identité de l'entreprise), texte en Barlow. */
 :root {
@@ -225,3 +233,15 @@ td input[type=text] { min-width: 110px; padding: 5px 8px; }
 @media (prefers-reduced-motion: no-preference) {
   .vcard, .vbtn, .btn { transition: background-color .2s, border-color .2s, opacity .2s; }
 }
+
+/* Bas de page et note « Traitement des données » */
+.foot { margin-top: 22px; display: flex; justify-content: center; }
+.privacy { border: 0; border-radius: 18px; padding: 0; width: min(640px, calc(100vw - 32px)); max-height: calc(100vh - 48px); background: var(--surface); color: var(--fg); box-shadow: 0 24px 60px rgba(20,30,20,.25); }
+.privacy::backdrop { background: rgba(20, 30, 20, .45); }
+.privacy-body { padding: 22px 24px 26px; overflow-y: auto; max-height: calc(100vh - 48px); }
+.privacy-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+.privacy-head h2 { margin: 0; color: var(--accent); }
+.privacy dl { margin: 0; display: flex; flex-direction: column; }
+.privacy dt { font-family: var(--f-display); font-weight: 600; font-size: 1.15rem; margin-top: 14px; }
+.privacy dd { margin: 2px 0 0; color: var(--muted); max-width: 62ch; }
+.privacy a { color: var(--accent); }

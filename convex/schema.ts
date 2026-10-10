@@ -11,6 +11,8 @@ export default defineSchema({
     phase: phaseV,
     budget: v.number(),
     perSeason: v.number(),
+    // Adresse de contact affichée dans la note « Traitement des données ».
+    contactEmail: v.optional(v.string()),
   }),
 
   // Liste blanche des membres. `cle` est le secret du lien personnel.

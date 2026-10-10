@@ -42,7 +42,7 @@ export default function VoteView({ state, cle }: { state: AppState; cle: string 
           <p className="muted small rules">
             {perSeason} voix au plus par saison. Une sortie possible sur plusieurs saisons ne reçoit qu'une voix de votre
             part : placez-la dans la saison que vous préférez. Chaque voix coûte des jetons selon le prix de la sortie.
-            Vous pouvez changer d'avis jusqu'à la clôture.
+            Vous pouvez changer d'avis jusqu'à la clôture. Votre vote est visible des autres membres, comme à main levée.
           </p>
         </div>
         <div className="purse" aria-label={`Il vous reste ${left} jetons sur ${budget}`}>

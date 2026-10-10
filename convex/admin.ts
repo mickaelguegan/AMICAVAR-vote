@@ -42,6 +42,18 @@ export const setPhase = mutation({
   },
 });
 
+/** Adresse de contact pour les questions sur les données personnelles. */
+export const setContact = mutation({
+  args: { cle: v.string(), email: v.string() },
+  handler: async (ctx, { cle, email }) => {
+    await requireBureau(ctx, cle);
+    const mail = email.trim().toLowerCase();
+    if (mail && !isEmail(mail)) fail("Adresse e-mail invalide.");
+    const settings = await ensureSettings(ctx);
+    await ctx.db.patch(settings._id, { contactEmail: mail });
+  },
+});
+
 export const setTieBreak = mutation({
   args: { cle: v.string(), proposalId: v.id("proposals"), value: v.number() },
   handler: async (ctx, { cle, proposalId, value }) => {

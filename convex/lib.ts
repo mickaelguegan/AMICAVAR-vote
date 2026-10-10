@@ -14,7 +14,7 @@ export type Member = {
   cle: string;
 };
 
-export type Settings = { _id?: any; phase: Phase; budget: number; perSeason: number };
+export type Settings = { _id?: any; phase: Phase; budget: number; perSeason: number; contactEmail?: string };
 
 export function fail(message: string): never {
   throw new ConvexError(message);

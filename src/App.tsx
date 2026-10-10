@@ -8,6 +8,7 @@ import ProposalsView from "./views/ProposalsView";
 import VoteView from "./views/VoteView";
 import ResultsView from "./views/ResultsView";
 import BureauView from "./views/BureauView";
+import Privacy from "./Privacy";
 
 type Tab = "props" | "vote" | "res" | "bureau";
 const TAB_FOR_PHASE: Record<Phase, Tab> = { propositions: "props", vote: "vote", resultats: "res" };
@@ -55,6 +56,7 @@ function Gate({ title, extra }: { title: string; extra?: ReactNode }) {
         </p>
         {extra}
       </div>
+      <Privacy />
     </div>
   );
 }
@@ -141,6 +143,8 @@ function Main({ state, cle, onCleChange }: { state: AppState; cle: string; onCle
           </p>
         </div>
       </section>
+
+      <Privacy contact={settings.contactEmail} />
     </div>
   );
 }
