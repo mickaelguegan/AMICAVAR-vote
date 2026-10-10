@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api, type AppState, type MemberAdmin } from "../api";
 import { personalLink, saveCle } from "../session";
 import { ConfirmButton, copyText, useRun, useToast } from "../ui";
-import { parseMembers, type Role } from "../../convex/rules";
+import { parseMembers, ROLE_LABEL, type Role } from "../../convex/rules";
 
 export default function BureauView({
   state,
@@ -69,8 +69,9 @@ export default function BureauView({
       <section className="panel">
         <h2>Ajouter des membres</h2>
         <p className="small muted rules">
-          Collez un tableau Excel de 4 colonnes : <strong>Prénom, Nom, E-mail, Rôle</strong> (« membre » ou
-          « bureau » ; vide = membre). Une ligne d'en-tête est ignorée. Une adresse déjà connue met à jour le membre
+          Collez un tableau Excel de 4 colonnes : <strong>Prénom, Nom, E-mail, Rôle</strong> (« membre »,
+          « bureau » ou « gestion » ; vide = membre). Le rôle Gestion donne accès aux adresses et aux liens personnels :
+          réservez-le à une ou deux personnes. Une ligne d'en-tête est ignorée. Une adresse déjà connue met à jour le membre
           sans changer son lien.
         </p>
         <textarea
@@ -85,7 +86,7 @@ export default function BureauView({
           <div className="small">
             <p>
               <strong>{parsed.rows.length}</strong> membre(s) prêt(s) à importer, dont{" "}
-              {parsed.rows.filter((r) => r.role === "bureau").length} au bureau.
+              {parsed.rows.filter((r) => r.role !== "membre").length} au bureau.
             </p>
             {parsed.errors.map((e) => (
               <p key={e} className="err">
@@ -192,8 +193,11 @@ export default function BureauView({
                           disabled={isMe}
                           onChange={(e) => run(() => setRole({ cle, id: m.id, role: e.target.value as Role }))}
                         >
-                          <option value="membre">Membre</option>
-                          <option value="bureau">Bureau</option>
+                          {(Object.keys(ROLE_LABEL) as Role[]).map((r) => (
+                            <option key={r} value={r}>
+                              {ROLE_LABEL[r]}
+                            </option>
+                          ))}
                         </select>
                       </td>
                       <td>{m.voteCount}</td>

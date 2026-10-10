@@ -3,7 +3,8 @@ import { v } from "convex/values";
 
 export const seasonV = v.union(v.literal("P"), v.literal("E"), v.literal("A"));
 export const phaseV = v.union(v.literal("propositions"), v.literal("vote"), v.literal("resultats"));
-export const roleV = v.union(v.literal("membre"), v.literal("bureau"));
+// « admin » = gestion des membres (e-mails, liens personnels) : à réserver à une ou deux personnes.
+export const roleV = v.union(v.literal("membre"), v.literal("bureau"), v.literal("admin"));
 
 export default defineSchema({
   // Un seul document : la campagne en cours.

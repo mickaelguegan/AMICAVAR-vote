@@ -37,7 +37,7 @@ export default function Privacy({ contact }: { contact?: string }) {
             <dt>Qui les voit</dt>
             <dd>
               Les propositions et les votes sont visibles par tous les membres connectés, avec le nom de leur auteur, comme un vote à
-              main levée. Les adresses e-mail ne sont visibles que du bureau.
+              main levée. Les adresses e-mail et les liens personnels ne sont accessibles qu'aux une ou deux personnes du bureau chargées de la gestion des membres.
             </dd>
 
             <dt>Base légale</dt>

@@ -5,7 +5,7 @@ import { allocate, SEASON_LABEL, SEASONS, type ResultRow, type Season } from "..
 
 export default function ResultsView({ state, cle }: { state: AppState; cle: string }) {
   const { me, settings, proposals, votes, memberCount } = state;
-  const isBureau = me.role === "bureau";
+  const isBureau = me.role !== "membre";
   const setTieBreak = useMutation(api.admin.setTieBreak);
   const run = useRun();
 

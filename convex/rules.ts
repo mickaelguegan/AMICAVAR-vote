@@ -3,7 +3,8 @@
 
 export type Season = "P" | "E" | "A";
 export type Phase = "propositions" | "vote" | "resultats";
-export type Role = "membre" | "bureau";
+export type Role = "membre" | "bureau" | "admin";
+export const ROLE_LABEL: Record<Role, string> = { membre: "Membre", bureau: "Bureau", admin: "Gestion" };
 
 export const SEASONS: Season[] = ["P", "E", "A"];
 export const SEASON_LABEL: Record<Season, string> = { P: "Printemps", E: "Été", A: "Automne" };
@@ -199,7 +200,7 @@ export function parseMembers(text: string): { rows: MemberRow[]; errors: string[
       return;
     }
     const roleCell = (cells[3] ?? "").toLowerCase();
-    rows.push({ prenom: cells[0], nom: cells[1], email, role: roleCell.startsWith("bur") ? "bureau" : "membre" });
+    rows.push({ prenom: cells[0], nom: cells[1], email, role: roleCell.startsWith("bur") ? "bureau" : roleCell.startsWith("ges") || roleCell.startsWith("adm") ? "admin" : "membre" });
   });
   return { rows, errors };
 }

@@ -18,13 +18,13 @@ Prérequis côté dépôt :
 - secret `CONVEX_DEPLOY_KEY` (clé de déploiement **Production** de Convex, permission `deployment:deploy`) ;
 - Settings → Pages → Source : **GitHub Actions**.
 
-## Créer le premier accès bureau (une seule fois)
+## Créer le premier accès (une seule fois)
 
 1. Tableau de bord Convex, base **Production** → **Functions** → `setup:createFirstBureau`.
 2. Arguments : `{ "prenom": "…", "nom": "…", "email": "…" }` → **Run**.
 3. Le résultat contient une `cle`. Ouvrez l'adresse du site suivie de `?cle=` et de cette clé.
 
-Les autres membres s'ajoutent ensuite depuis l'onglet **Bureau** du site (copier-coller depuis Excel).
+Ce premier compte a le rôle **Gestion** (accès aux e-mails et aux liens). Les autres membres s'ajoutent ensuite depuis l'onglet **Gestion** du site (copier-coller depuis Excel). Rôles : *membre* ; *bureau* (modération, phases, arbitrages) ; *gestion* (en plus : membres, e-mails, liens personnels), à réserver à une ou deux personnes.
 
 ## Déroulé d'une campagne
 

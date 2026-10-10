@@ -10,7 +10,7 @@ export type Member = {
   prenom: string;
   nom: string;
   email: string;
-  role: "membre" | "bureau";
+  role: "membre" | "bureau" | "admin";
   cle: string;
 };
 
@@ -47,8 +47,19 @@ export async function requireMember(ctx: QCtx, cle: string): Promise<Member> {
 
 export async function requireBureau(ctx: QCtx, cle: string): Promise<Member> {
   const m = await requireMember(ctx, cle);
-  if (m.role !== "bureau") fail("Action réservée au bureau.");
+  if (m.role !== "bureau" && m.role !== "admin") fail("Action réservée au bureau.");
   return m;
+}
+
+/** Gestion des membres (e-mails, liens personnels) : réservée au rôle « admin ». */
+export async function requireAdmin(ctx: QCtx, cle: string): Promise<Member> {
+  const m = await requireMember(ctx, cle);
+  if (m.role !== "admin") fail("Action réservée à la gestion des membres.");
+  return m;
+}
+
+export function isBureauRole(role: string): boolean {
+  return role === "bureau" || role === "admin";
 }
 
 export async function getSettings(ctx: QCtx): Promise<Settings> {

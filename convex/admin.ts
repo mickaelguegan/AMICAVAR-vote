@@ -1,14 +1,14 @@
 import { mutationGeneric as mutation, queryGeneric as query } from "convex/server";
 import { v } from "convex/values";
 import { phaseV, roleV } from "./schema";
-import { countBureau, ensureSettings, fail, newCle, requireBureau } from "./lib";
+import { ensureSettings, fail, newCle, requireAdmin, requireBureau } from "./lib";
 import { isEmail, PHASE_LABEL } from "./rules";
 
 /** Liste complète des membres avec e-mails et clés : réservée au bureau. */
 export const members = query({
   args: { cle: v.string() },
   handler: async (ctx, { cle }) => {
-    await requireBureau(ctx, cle);
+    await requireAdmin(ctx, cle);
     const all: any[] = await ctx.db.query("members").collect();
     const votes: any[] = await ctx.db.query("votes").collect();
     return all
@@ -17,7 +17,7 @@ export const members = query({
         prenom: m.prenom as string,
         nom: m.nom as string,
         email: m.email as string,
-        role: m.role as "membre" | "bureau",
+        role: m.role as "membre" | "bureau" | "admin",
         cle: m.cle as string,
         voteCount: votes.filter((x) => x.memberId === m._id).length,
       }))
@@ -46,7 +46,7 @@ export const setPhase = mutation({
 export const setContact = mutation({
   args: { cle: v.string(), email: v.string() },
   handler: async (ctx, { cle, email }) => {
-    await requireBureau(ctx, cle);
+    await requireAdmin(ctx, cle);
     const mail = email.trim().toLowerCase();
     if (mail && !isEmail(mail)) fail("Adresse e-mail invalide.");
     const settings = await ensureSettings(ctx);
@@ -69,7 +69,7 @@ export const importMembers = mutation({
     rows: v.array(v.object({ prenom: v.string(), nom: v.string(), email: v.string(), role: roleV })),
   },
   handler: async (ctx, { cle, rows }) => {
-    const me = await requireBureau(ctx, cle);
+    const me = await requireAdmin(ctx, cle);
     let added = 0;
     let updated = 0;
     for (const r of rows) {
@@ -83,8 +83,8 @@ export const importMembers = mutation({
         .withIndex("by_email", (q: any) => q.eq("email", email))
         .first();
       if (existing) {
-        // On ne se retire jamais soi-même le rôle bureau par un import.
-        const role = existing._id === me._id ? "bureau" : r.role;
+        // On ne modifie jamais son propre rôle par un import.
+        const role = existing._id === me._id ? existing.role : r.role;
         await ctx.db.patch(existing._id, { prenom, nom, role });
         updated++;
       } else {
@@ -99,8 +99,8 @@ export const importMembers = mutation({
 export const setRole = mutation({
   args: { cle: v.string(), id: v.id("members"), role: roleV },
   handler: async (ctx, { cle, id, role }) => {
-    const me = await requireBureau(ctx, cle);
-    if (id === me._id && role !== "bureau") fail("Vous ne pouvez pas retirer votre propre rôle bureau.");
+    const me = await requireAdmin(ctx, cle);
+    if (id === me._id) fail("Vous ne pouvez pas modifier votre propre rôle.");
     await ctx.db.patch(id, { role });
   },
 });
@@ -108,7 +108,7 @@ export const setRole = mutation({
 export const updateMember = mutation({
   args: { cle: v.string(), id: v.id("members"), prenom: v.string(), nom: v.string(), email: v.string() },
   handler: async (ctx, { cle, id, prenom, nom, email }) => {
-    await requireBureau(ctx, cle);
+    await requireAdmin(ctx, cle);
     const mail = email.trim().toLowerCase();
     if (!isEmail(mail)) fail("Adresse e-mail invalide.");
     if (!prenom.trim() || !nom.trim()) fail("Prénom et nom obligatoires.");
@@ -125,7 +125,7 @@ export const updateMember = mutation({
 export const removeMember = mutation({
   args: { cle: v.string(), id: v.id("members") },
   handler: async (ctx, { cle, id }) => {
-    const me = await requireBureau(ctx, cle);
+    const me = await requireAdmin(ctx, cle);
     if (id === me._id) fail("Vous ne pouvez pas vous supprimer vous-même.");
     const votes: any[] = await ctx.db
       .query("votes")
@@ -140,7 +140,7 @@ export const removeMember = mutation({
 export const regenerateCle = mutation({
   args: { cle: v.string(), id: v.id("members") },
   handler: async (ctx, { cle, id }) => {
-    const me = await requireBureau(ctx, cle);
+    const me = await requireAdmin(ctx, cle);
     const fresh = newCle();
     await ctx.db.patch(id, { cle: fresh });
     // Si un membre du bureau régénère son propre lien, l'interface doit basculer sur le nouveau.
@@ -152,21 +152,12 @@ export const regenerateCle = mutation({
 export const resetCampaign = mutation({
   args: { cle: v.string(), confirmation: v.string() },
   handler: async (ctx, { cle, confirmation }) => {
-    await requireBureau(ctx, cle);
+    await requireAdmin(ctx, cle);
     if (confirmation.trim().toUpperCase() !== "REINITIALISER")
       fail("Tapez REINITIALISER pour confirmer.");
     for (const x of await ctx.db.query("votes").collect()) await ctx.db.delete(x._id);
     for (const p of await ctx.db.query("proposals").collect()) await ctx.db.delete(p._id);
     const settings = await ensureSettings(ctx);
     await ctx.db.patch(settings._id, { phase: "propositions" });
-  },
-});
-
-/** Compteur utilisé par l'interface pour éviter de retirer le dernier membre du bureau. */
-export const bureauCount = query({
-  args: { cle: v.string() },
-  handler: async (ctx, { cle }) => {
-    await requireBureau(ctx, cle);
-    return await countBureau(ctx);
   },
 });

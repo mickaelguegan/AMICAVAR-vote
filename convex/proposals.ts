@@ -1,6 +1,6 @@
 import { mutationGeneric as mutation } from "convex/server";
 import { v } from "convex/values";
-import { deleteVotesOf, fail, fullName, getSettings, requireBureau, requireMember, rule } from "./lib";
+import { deleteVotesOf, fail, fullName, getSettings, isBureauRole, requireBureau, requireMember, rule } from "./lib";
 import { cleanProposal, SEASONS } from "./rules";
 
 const proposalArgs = {
@@ -39,7 +39,7 @@ export const update = mutation({
     const p: any = await ctx.db.get(id);
     if (!p) fail("Cette proposition n'existe plus.");
     const { phase } = await getSettings(ctx);
-    const isBureau = me.role === "bureau";
+    const isBureau = isBureauRole(me.role);
     const isAuthor = p.authorId === me._id;
     const clean = rule(() => cleanProposal(input));
 
@@ -71,7 +71,7 @@ export const remove = mutation({
     if (!p) return;
     const { phase } = await getSettings(ctx);
     if (phase !== "propositions") fail("La phase de propositions est close.");
-    if (p.authorId !== me._id && me.role !== "bureau")
+    if (p.authorId !== me._id && !isBureauRole(me.role))
       fail("Vous ne pouvez supprimer que vos propres propositions.");
     await deleteVotesOf(ctx, id);
     await ctx.db.delete(id);

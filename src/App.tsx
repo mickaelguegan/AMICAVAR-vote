@@ -63,7 +63,8 @@ function Gate({ title, extra }: { title: string; extra?: ReactNode }) {
 
 function Main({ state, cle, onCleChange }: { state: AppState; cle: string; onCleChange: (c: string | null) => void }) {
   const { me, settings } = state;
-  const isBureau = me.role === "bureau";
+  const isBureau = me.role !== "membre";
+  const isAdmin = me.role === "admin";
   const [tab, setTab] = useState<Tab>(TAB_FOR_PHASE[settings.phase]);
 
   // Quand le bureau change de phase, chacun bascule sur l'écran correspondant.
@@ -76,7 +77,7 @@ function Main({ state, cle, onCleChange }: { state: AppState; cle: string; onCle
     { k: "props", label: "Propositions" },
     { k: "vote", label: "Mon vote" },
     ...(showResults ? [{ k: "res" as Tab, label: "Résultats" }] : []),
-    ...(isBureau ? [{ k: "bureau" as Tab, label: "Bureau" }] : []),
+    ...(isAdmin ? [{ k: "bureau" as Tab, label: "Gestion" }] : []),
   ];
   const current = tabs.some((t) => t.k === tab) ? tab : "props";
 
@@ -92,7 +93,7 @@ function Main({ state, cle, onCleChange }: { state: AppState; cle: string; onCle
             <strong>
               {me.prenom} {me.nom}
             </strong>{" "}
-            {isBureau && <span className="tag-admin">Bureau</span>}
+            {isBureau && <span className="tag-admin">{isAdmin ? "Bureau · gestion" : "Bureau"}</span>}
           </span>
           <button
             className="linkbtn"

@@ -10,7 +10,7 @@ const EMPTY: Draft = { title: "", description: "", seasons: [], suggestedCost: n
 export default function ProposalsView({ state, cle }: { state: AppState; cle: string }) {
   const { me, settings, proposals } = state;
   const open = settings.phase === "propositions";
-  const isBureau = me.role === "bureau";
+  const isBureau = me.role !== "membre";
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(EMPTY);
   const [error, setError] = useState("");
@@ -208,7 +208,7 @@ function ProposalCard({
 }) {
   const { me, settings, proposals } = state;
   const open = settings.phase === "propositions";
-  const isBureau = me.role === "bureau";
+  const isBureau = me.role !== "membre";
   const isAuthor = p.authorId === me.id;
 
   const remove = useMutation(api.proposals.remove);
